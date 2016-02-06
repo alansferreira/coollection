@@ -4,6 +4,8 @@
 			<id>ossrh</id>
 			<username>alan.sferreira</username>
 			<password>123Mudar</password>
+			<privateKey>/path/to/identity</privateKey>
+			<passphrase>my_key_passphrase</passphrase>
 		</server>
 	</servers>
 	<profiles>
