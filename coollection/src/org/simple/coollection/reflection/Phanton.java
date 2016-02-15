@@ -24,19 +24,15 @@ public class Phanton<T> {
 	private Object invoke(String name){
 		Object nestedTarget = target;
 		Object returnValue = null;
+		
 		Class<? extends Object> nestedTargetClazz = clazz;
 		for (String nestedName : name.split("\\.")) {
 			try {
 				Method m = nestedTargetClazz.getMethod(nestedName);
 				returnValue = m.invoke(nestedTarget);
 			} catch (Exception e) {
-				Field field = null;
-				for (final Field fieldIterate : nestedTargetClazz.getDeclaredFields()) {
-					if (!nestedName.equals(fieldIterate.getName()))continue;
-					field = fieldIterate;
-					break;
-				}
-
+				Field field = findField(nestedName, nestedTargetClazz);
+				
 				if(field==null) throw new RuntimeException(e);
 
 				try {
@@ -56,6 +52,27 @@ public class Phanton<T> {
 		
 		return returnValue;
 	}
+	
+	
+	private Field findField(String fieldName, Class<?> clazz) {
+		Field field = null;
+		try {
+			field = clazz.getField(fieldName);
+		} catch (NoSuchFieldException e2) {
+		} catch (SecurityException e2) {
+		}
+		if(field==null) {
+			try {
+				field = clazz.getDeclaredField(fieldName);
+			} catch (NoSuchFieldException e2) {
+			} catch (SecurityException e2) {
+			}
+		}
+		
+		return field;
+		
+	}
+
 	public void set(String name, Object newValue) {
 		invoke(name, newValue);
 	}
@@ -76,13 +93,10 @@ public class Phanton<T> {
 			Method m = nestedTargetClazz.getMethod(nestedName, newValue.getClass());
 			m.invoke(nestedTarget, newValue);
 		} catch (Exception e) {
-			Field field = null;
-			for (final Field fieldIterate : nestedTargetClazz.getDeclaredFields()) {
-				if (!nestedName.equals(fieldIterate.getName()))continue;
-				field = fieldIterate;
-				break;
-			}
+			Field field = findField(nestedName, nestedTargetClazz);
+
 			if(field==null) throw new RuntimeException(e);
+			
 			try {
 				field.setAccessible(Boolean.TRUE);
 				field.set(nestedTarget, newValue);

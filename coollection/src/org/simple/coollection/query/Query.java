@@ -2,13 +2,16 @@ package org.simple.coollection.query;
 
 
 
-import static org.simple.coollection.Coollection.from;
 import static org.simple.coollection.Coollection.eq;
+import static org.simple.coollection.Coollection.from;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.simple.coollection.matcher.Matcher;
 import org.simple.coollection.query.criteria.Criteria;
@@ -127,19 +130,27 @@ public class Query<T> {
 			Phanton.from(t).set(method, newValue);
 		}
 	}
+	public Map<Object, List<T>> groupBy(String groupBy) {
+		Map<Object, List<T>> groups = new HashMap<Object, List<T>>(); 
+		for (T t : all()) {
+			Object v = (Object) Phanton.from(t).call(groupBy);
+			
+			if(!groups.containsKey(v)) groups.put(v, new ArrayList<T>()); 
+			
+			groups.get(v).add(t);
+		}
+		return groups;
+	}
+	
 	public Query<T> distinct(String distinctBy) {
-		List<T> result = new ArrayList<T>();
-		List<Object> distinct = new ArrayList<Object>();
+		HashSet<Object> distinct = new HashSet<Object>();
 		for (T t : all()) {
 			Object v = (Object) Phanton.from(t).call(distinctBy);
 			
-			if(v==null)continue;
-			if(distinct.contains(v))continue;
 			
 			distinct.add(v);
-			result.add(t);
 		}
-		return from(result);
+		return (Query<T>) from(Arrays.asList(distinct.toArray()));
 	}
 	public double sum(String sumBy) {
 		Double sum = 0D;

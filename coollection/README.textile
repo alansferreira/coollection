@@ -118,4 +118,15 @@ Set value to all fields in collection
 from(animals).set("name", "My animal");
 </pre>
 
+h3. 9 - Group Values
+
+Returns an HashMap of Value as Key and List of Objects that contain the value
+
+Map<Object, List<Animal>>
+
+<pre>
+from(jungle.getAnimals()).groupBy("specimen.name")
+</pre>
+
+
 Be happy!
