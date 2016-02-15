@@ -1,9 +1,0 @@
-org.coollection
-org.coollection.matcher
-org.coollection.matcher.custom
-org.coollection.query
-org.coollection.query.criteria
-org.coollection.query.order
-org.coollection.query.specification
-org.coollection.query.specification.custom
-org.coollection.reflection

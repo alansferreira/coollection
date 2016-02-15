@@ -8,7 +8,7 @@ Iterate over a collection is a medieval way to filtering, mapping and ordering. 
 
 h2. How it works?
 
-It's easy to use. Just add @import static org.coollection.Coollection.*;@ in your class and... More nothing!
+It's easy to use. Just add @import static com.wagnerandade.coollection.Coollection.*;@ in your class and... More nothing!
 
 h2. How to use this?
 
@@ -77,6 +77,45 @@ You can use just order, without filter.
 
 <pre>
 from(animals).orderBy("name");
+</pre>
+
+h3. 5 - Nested Expressions
+
+Nested Expressions can´t be used for List or Arrays, it´s only for Objects.
+
+<pre>
+from(animals).where("specimen.name", eq("Feline")).all();
+</pre>
+
+h3. 6 - Select Another collection
+
+Select Another collection serves to bring a sublist in the original expression
+
+<pre>
+from(jungles).select("animals").where("specimen.name", eq("Feline")).all();
+</pre>
+
+or you can use typed select
+<pre>
+from(jungles).<b><animal></b>select("animals").first().getName(); 
+</pre>
+
+
+h3. 7 - Distinct values
+
+Like a SQL Distinct, the duplicate values are discarded 
+
+<pre>
+from(animals).distinct("name");
+</pre>
+from(animals).<animal>distinct("name");
+
+h3. 8 - Set Values
+
+Set value to all fields in collection
+
+<pre>
+from(animals).set("name", "My animal");
 </pre>
 
 Be happy!
