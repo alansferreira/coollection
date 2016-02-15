@@ -8,7 +8,7 @@ Iterate over a collection is a medieval way to filtering, mapping and ordering. 
 
 h2. How it works?
 
-It's easy to use. Just add @import static com.wagnerandade.coollection.Coollection.*;@ in your class and... More nothing!
+It's easy to use. Just add @import static org.simple.coollection.Coollection.*;@ in your class and... More nothing!
 
 h2. How to use this?
 
@@ -97,7 +97,7 @@ from(jungles).select("animals").where("specimen.name", eq("Feline")).all();
 
 or you can use typed select
 <pre>
-from(jungles).<b><animal></b>select("animals").first().getName(); 
+from(jungles).<b>&lt;animal&gt;</b>select("animals").first().getName(); 
 </pre>
 
 
