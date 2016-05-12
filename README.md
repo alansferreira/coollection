@@ -1,4 +1,4 @@
-h1. Coollection
+**Coollection**
 
 *A cool way to manipulate collections in Java.*
 
@@ -6,13 +6,13 @@ Iterate over a collection is a medieval way to filtering, mapping and ordering. 
 
 "Download Coollection 0.2.0":http://github.com/downloads/wagnerandrade/coollection/coollection-0.2.0.jar
 
-h2. How it works?
+**How it works?**
 
 It's easy to use. Just add @import static com.wagnerandade.coollection.Coollection.*;@ in your class and... More nothing!
 
-h2. How to use this?
+**How to use this?**
 
-h3. 1 - Filter
+**1 - Filter**
 
 First you need a Collection. Here we create a Animal List, and we called it animals.
 
@@ -34,7 +34,7 @@ Or, would the *first* animal with 2 year old? Easy too!
 from(animals).where("age", eq(2)).first();
 ```
 
-h3. 2 - Filter specification
+**2 - Filter specification**
 
 You can be more specific in your query, adding more specifications, like *and* and *or*.
 
@@ -43,7 +43,7 @@ from(animals).where("name", eq("Lion")).and("age", eq(2)).all();
 from(animals).where("name", eq("Dog")).or("age", eq(5)).all();
 ```
 
-h3. 3 - Matchers
+**3 - Matchers**
 
 There are other matchers to be precise!
 
@@ -64,7 +64,7 @@ not(contains("at"))
 not(isNull())
 ```
 
-h3. 4 - Order
+**4 - Order**
 
 Order is a very interesting feature to sort your collection.
 
