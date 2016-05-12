@@ -16,67 +16,81 @@ h3. 1 - Filter
 
 First you need a Collection. Here we create a Animal List, and we called it animals.
 
-<pre>
+```java
 List<Animal> animals;
-</pre>
+```
 
 Later you goes add a lot of animals in this list.
 
 Now, you want to take *all* cats, it's easy for Coollections! In this case, name is a method (@animal.name()@).
 
-<pre>
+```java
 from(animals).where("name", eq("Cat")).all();
-</pre>
+```
 
 Or, would the *first* animal with 2 year old? Easy too!
 
-<pre>
+```java
 from(animals).where("age", eq(2)).first();
-</pre>
+```
 
 h3. 2 - Filter specification
 
 You can be more specific in your query, adding more specifications, like *and* and *or*.
 
-<pre>
+```java
 from(animals).where("name", eq("Lion")).and("age", eq(2)).all();
 from(animals).where("name", eq("Dog")).or("age", eq(5)).all();
-</pre>
+```
 
 h3. 3 - Matchers
 
 There are other matchers to be precise!
 
-<pre>
+```java
 eq("Cat")
 eqIgnoreCase("Cat")
 contains("og")
 greaterThan(3)
 lessThan(10)
 isNull()
-</pre>
+```
 
 Or a special matcher, called *not*.
 
-<pre>
+```java
 not(eq("Bird"))
 not(contains("at"))
 not(isNull())
-</pre>
+```
 
 h3. 4 - Order
 
 Order is a very interesting feature to sort your collection.
 
-<pre>
+```java
 from(animals).where("name", eq("Cat")).orderBy("age").all();
 from(animals).where("age", eq(5)).orderBy("name", Order.DESC).first();
-</pre>
+```
 
 You can use just order, without filter.
 
-<pre>
+```java
 from(animals).orderBy("name");
-</pre>
+```
+
+
+**To Maven Integration**
+
+import project from git to your workspace and add dependency
+
+```xml
+  <dependency>
+    <groupId>coollection</groupId>
+    <artifactId>coollection</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </dependency>
+```
+
 
 Be happy!
