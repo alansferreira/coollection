@@ -8,9 +8,25 @@ Iterate over a collection is a medieval way to filtering, mapping and ordering. 
 
 **How it works?**
 
-It's easy to use. Just add @import static com.wagnerandade.coollection.Coollection.*;@ in your class and... More nothing!
+It's easy to use. Just import the collection static methods in your class and... More nothing!
+
+```java 
+import static com.wagnerandade.coollection.Coollection.*;
+``` 
 
 **How to use this?**
+
+```java
+public class Animal {
+  private String name;
+  private Specime specime;
+  
+}
+
+List<Animal> animals;
+  
+```
+
 
 **1 - Filter**
 
@@ -72,6 +88,18 @@ Order is a very interesting feature to sort your collection.
 from(animals).where("name", eq("Cat")).orderBy("age").all();
 from(animals).where("age", eq(5)).orderBy("name", Order.DESC).first();
 ```
+
+**5 - Select**
+
+Select field from expression.
+
+```java
+from(animals).select("name").all();
+from(animals).select("toString").all();
+from(animals).select("specime").all();
+from(animals).<Specime>select("specime").all();
+```
+
 
 You can use just order, without filter.
 
