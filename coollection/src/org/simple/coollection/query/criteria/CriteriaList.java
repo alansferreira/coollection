@@ -3,7 +3,6 @@ package org.simple.coollection.query.criteria;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.simple.coollection.query.specification.custom.AndSpecification;
 import org.simple.coollection.query.specification.custom.OrSpecification;
 
 public class CriteriaList<T> {
