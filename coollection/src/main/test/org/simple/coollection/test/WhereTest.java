@@ -40,4 +40,14 @@ public class WhereTest {
 		
 	}
 
+	@Test
+	public void firstCatWithName() {
+		PetAnimal cat = from(myPet.getAnimalsStore())
+				.and("getSpecies", eqIgnoreCase("cat"))
+				.or("name", eqIgnoreCase("kila")).first();
+		System.out.println(cat.getName());
+		assert cat!=null && cat.getSpecies()=="cat";
+		
+	}
+
 }

@@ -68,6 +68,10 @@ public class Phanton<T> {
 			} catch (SecurityException e2) {
 			}
 		}
+
+		if(field==null && clazz.getSuperclass()!=Object.class) {
+			field = findField(fieldName, clazz.getSuperclass());
+		}
 		
 		return field;
 		
