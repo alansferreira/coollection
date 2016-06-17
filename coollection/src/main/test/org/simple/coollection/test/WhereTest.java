@@ -1,15 +1,12 @@
 package org.simple.coollection.test;
 
-import static org.simple.coollection.Coollection.*;
+import static org.simple.coollection.Coollection.eqIgnoreCase;
+import static org.simple.coollection.Coollection.from;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.simple.coollection.query.Query;
-import org.simple.coollection.test.pojos.Animal;
 import org.simple.coollection.test.pojos.Cat;
 import org.simple.coollection.test.pojos.Dog;
 import org.simple.coollection.test.pojos.PetAnimal;
