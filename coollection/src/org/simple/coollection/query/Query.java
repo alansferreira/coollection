@@ -143,14 +143,14 @@ public class Query<T> {
 	}
 	
 	public Query<T> distinct(String distinctBy) {
-		HashSet<Object> distinct = new HashSet<Object>();
+		HashMap<Object, T> distinct = new HashMap<Object, T>();
 		for (T t : all()) {
 			Object v = (Object) Phanton.from(t).call(distinctBy);
+			if(distinct.containsKey(v)) continue;
 			
-			
-			distinct.add(v);
+			distinct.put(v, t);
 		}
-		return (Query<T>) from(Arrays.asList(distinct.toArray()));
+		return (Query<T>) from(distinct.values());
 	}
 	public double sum(String sumBy) {
 		Double sum = 0D;
