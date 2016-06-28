@@ -34,7 +34,34 @@ public class Query<T> {
 		criterias = new CriteriaList<T>();
 	}
 
+	public <TInArr> Query<T> in(Collection<TInArr> values) {
+		//Query<T> ret = this;
+		for (Object v : values) {
+			Criteria<T> criteria = new Criteria<T>(eq(v));
+			criteria.setSpecification(new OrSpecification<T>());
+			criterias.add(criteria);
+
+			//ret = ret.or(method, eq(v));
+		}
+		return this;
+	}
+	public <TInArr> Query<T> in(TInArr... values) {
+		return in(Arrays.asList(values));
+		/*//Query<T> ret = this;
+		for (Object v : values) {
+			Criteria<T> criteria = new Criteria<T>(eq(v));
+			criteria.setSpecification(new OrSpecification<T>());
+			criterias.add(criteria);
+
+			//ret = ret.or(method, eq(v));
+		}
+		return this;
+		*/
+	}
 	public <TInArr> Query<T> in(String method, TInArr... values) {
+		return in(method, Arrays.asList(values));
+	}
+	public <TInArr> Query<T> in(String method, Collection<TInArr> values) {
 		//Query<T> ret = this;
 		for (Object v : values) {
 			Criteria<T> criteria = new Criteria<T>(method, eq(v));
@@ -101,6 +128,21 @@ public class Query<T> {
 		return null;
 	}
 
+	public List<T> firstOccours(int occours) {
+		List<T> all = cloneCollection(collection);
+		if(orderCriteria != null) {
+			all = orderCriteria.sort(all);
+		}
+		
+		ArrayList<T> list = new ArrayList<T>();
+		for(T item : all) {
+			if(criterias.match(item)) list.add(item);
+			if(list.size()>=occours) break;
+		}
+		
+		return list;
+	}
+
 	private List<T> cloneCollection(Collection<T> collection) {
 		List<T> list = new ArrayList<T>();
 		for(T item : collection) {
@@ -142,6 +184,15 @@ public class Query<T> {
 		return groups;
 	}
 
+	public Query<T> distinct() {
+		HashSet<T> distinct = new HashSet<T>();
+		
+		for (T t : all()) {
+			distinct.add(t);
+		}
+		
+		return (Query<T>) from(distinct);
+	}
 	public Query<T> distinct(String distinctBy) {
 		HashMap<Object, T> distinct = new HashMap<Object, T>();
 		
