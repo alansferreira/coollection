@@ -41,12 +41,32 @@ public class WhereTest {
 	}
 
 	@Test
-	public void firstCatWithName() {
-		PetAnimal cat = from(myPet.getAnimalsStore())
-				.and("getSpecies", eqIgnoreCase("cat"))
-				.or("name", eqIgnoreCase("kila")).first();
-		System.out.println(cat.getName());
-		assert cat!=null && cat.getSpecies()=="cat";
+	public void allCatsWithName() {
+		List<PetAnimal> cats = from(myPet.getAnimalsStore())
+				.where("getSpecies", eqIgnoreCase("cat"))
+				.and("name", eqIgnoreCase("kila")).all();
+		
+		for (PetAnimal cat : cats) {
+			System.out.println(cat.getName());
+		}
+
+		PetAnimal kila = cats.get(0);
+		
+		assert kila.getSpecies()=="cat" && kila.getName().equalsIgnoreCase("kila");
+		
+	}
+
+	@Test
+	public void allCatsOrCatsWithName() {
+		List<PetAnimal> cats = from(myPet.getAnimalsStore())
+				.where("getSpecies", eqIgnoreCase("cat"))
+				.or("name", eqIgnoreCase("kila")).all();
+		
+		for (PetAnimal cat : cats) {
+			System.out.println(cat.getName());
+		}
+
+		assert cats.size()>1;
 		
 	}
 
