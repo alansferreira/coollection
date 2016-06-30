@@ -35,28 +35,15 @@ public class Query<T> {
 	}
 
 	public <TInArr> Query<T> in(Collection<TInArr> values) {
-		//Query<T> ret = this;
 		for (Object v : values) {
 			Criteria<T> criteria = new Criteria<T>(eq(v));
 			criteria.setSpecification(new OrSpecification<T>());
 			criterias.add(criteria);
-
-			//ret = ret.or(method, eq(v));
 		}
 		return this;
 	}
 	public <TInArr> Query<T> in(TInArr... values) {
 		return in(Arrays.asList(values));
-		/*//Query<T> ret = this;
-		for (Object v : values) {
-			Criteria<T> criteria = new Criteria<T>(eq(v));
-			criteria.setSpecification(new OrSpecification<T>());
-			criterias.add(criteria);
-
-			//ret = ret.or(method, eq(v));
-		}
-		return this;
-		*/
 	}
 	public <TInArr> Query<T> in(String method, TInArr... values) {
 		return in(method, Arrays.asList(values));
@@ -154,6 +141,7 @@ public class Query<T> {
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	public <TSub> Query<TSub> select (String method) {
 		List<TSub> select = new ArrayList<TSub>();
 		for (T t : all()) {
