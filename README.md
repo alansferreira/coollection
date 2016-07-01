@@ -116,7 +116,7 @@ import project from git to your workspace and add dependency
   <dependency>
     <groupId>coollection</groupId>
     <artifactId>coollection</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-MASTER</version>
   </dependency>
 ```
 
