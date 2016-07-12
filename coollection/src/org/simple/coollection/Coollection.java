@@ -13,7 +13,7 @@ import org.simple.coollection.matcher.custom.LessThan;
 import org.simple.coollection.matcher.custom.Not;
 import org.simple.coollection.matcher.custom.StartsWith;
 import org.simple.coollection.query.Query;
-
+ 
 
 public class Coollection {
 
