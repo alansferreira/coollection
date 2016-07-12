@@ -26,23 +26,11 @@ public class CriteriaList<T> {
 		if(criterias.size() == 1) {
 			return criterias.get(0).match(item);
 		}
-		Boolean matched = null;
-		
-		Specification<T> lastSpec = null;
-
-		for(int i = criterias.size() - 1; i > -1; i--) {
+		boolean matched = true;
+		for(int i = criterias.size() - 1; i > 0; i--) {
 			Criteria<T> one = criterias.get(i);
-			Specification<T> spec = one.specification()!=null?one.specification(): lastSpec;
-			if(spec==null) spec = new AndSpecification<T>();
-			
-			if(spec.getClass() == OrSpecification.class) {
-				if(matched==null)matched = false;
-				matched = matched || one.match(item);
-			}else {
-				if(matched==null)matched = true;
-				matched = matched && one.match(item);
-			}
-			lastSpec = one.specification();
+			Criteria<T> other = criterias.get(i - 1);
+			matched = matched && one.specification().match(item, one, other);
 		}
 		return matched;
 	}
