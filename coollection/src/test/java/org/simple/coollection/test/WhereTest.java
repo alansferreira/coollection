@@ -60,8 +60,7 @@ public class WhereTest {
 	public void allCatsOrCatsWithName() {
 		List<PetAnimal> cats = from(myPet.getAnimalsStore())
 				.where("getSpecies", eqIgnoreCase("cat"))
-				.and("getSpecies", eqIgnoreCase("cat"))
-				.or("name", eqIgnoreCase("kila"))
+				.or("name", eqIgnoreCase("mila"))
 				.all();
 		
 		for (PetAnimal cat : cats) {
