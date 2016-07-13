@@ -11,7 +11,7 @@ Iterate over a collection is a medieval way to filtering, mapping and ordering. 
 It's easy to use. Just import the collection static methods in your class and... More nothing!
 
 ```java 
-import static com.wagnerandade.coollection.Coollection.*;
+import static org.simple.coollection.Coollection.*;
 ``` 
 
 **How to use this?**
@@ -116,7 +116,7 @@ import project from git to your workspace and add dependency
   <dependency>
     <groupId>coollection</groupId>
     <artifactId>coollection</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0-MASTER</version>
   </dependency>
 ```
 
