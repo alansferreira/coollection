@@ -2,8 +2,11 @@ package org.simple.coollection.query;
 
 
 
+import static org.simple.coollection.Coollection.eq;
+import static org.simple.coollection.Coollection.eqIgnoreCase;
 import static org.simple.coollection.Coollection.from;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -36,12 +39,25 @@ public class Query<T> {
 	public Query<T> in(Collection<T> values) {
 		List<T> all = cloneCollection(collection);
 		List<T> in = new ArrayList<T>();
+		List<T> valuesCopy = cloneCollection(values);
 		
-		for (T v : values) {
-			int vIndex = all.indexOf(v); 
-			if(vIndex==-1) continue;
+		for (T sub : valuesCopy) {
 			
-			in.add(all.get(vIndex));
+			for (T v : all) {
+				if (v == null && sub == null) continue;
+				
+				T left = (v != null ? v : sub); 
+				T right = (v != null ? sub : v); 
+				
+				if(left.getClass().isAssignableFrom(String.class)){
+					if (left.toString().equalsIgnoreCase(right.toString())) in.add(v);
+					
+				}else{
+					if (left.equals(right)) in.add(v);
+				}
+			}
+			
+			all.removeAll(in);
 			
 		}
 		
@@ -57,16 +73,25 @@ public class Query<T> {
 	public <TInArr> Query<T> in(String method, Collection<TInArr> values) {
 		List<T> allValues = from(collection).all();
 		List<T> in = new ArrayList<T>();
-		
-		for (T v : allValues) {
-			T sourceValue = (T) Phanton.from(v).call(method);
 
-			if(!values.contains(sourceValue))continue;
+		Class<?> contentsType = null;
+		
+		TInArr firstSample = from(allValues).<TInArr>select(method).first();
+		if(firstSample!=null) contentsType = firstSample.getClass();
+		
+		for (TInArr v : values) {
 			
-			in.add(v);
+			List<T> founded = null;
+			if(contentsType.isAssignableFrom(String.class)){
+				founded = from(allValues).where(method, eqIgnoreCase(v.toString())).all();
+			}else{
+				founded = from(allValues).where(method, eq(v)).all();
+			}
+			
+			in.addAll(founded);
 			
 		}
-		
+
 		return from(in);
 	}
 	public Query<T> where(String method, Matcher matcher) {

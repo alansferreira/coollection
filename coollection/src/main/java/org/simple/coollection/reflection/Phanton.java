@@ -110,4 +110,16 @@ public class Phanton<T> {
 		}
 
 	}
+
+	public Class<?> getClazz() {
+		return clazz;
+	}
+
+	public void setClazz(Class<?> clazz) {
+		this.clazz = clazz;
+	}
+
+	public T getTarget() {
+		return target;
+	}
 }
