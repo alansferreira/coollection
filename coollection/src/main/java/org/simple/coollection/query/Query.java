@@ -2,7 +2,6 @@ package org.simple.coollection.query;
 
 
 
-import static org.simple.coollection.Coollection.eq;
 import static org.simple.coollection.Coollection.from;
 
 import java.util.ArrayList;
@@ -34,30 +33,41 @@ public class Query<T> {
 		criterias = new CriteriaList<T>();
 	}
 
-	public <TInArr> Query<T> in(Collection<TInArr> values) {
-		for (Object v : values) {
-			Criteria<T> criteria = new Criteria<T>(eq(v));
-			criteria.setSpecification(new OrSpecification<T>());
-			criterias.add(criteria);
+	public Query<T> in(Collection<T> values) {
+		List<T> all = cloneCollection(collection);
+		List<T> in = new ArrayList<T>();
+		
+		for (T v : values) {
+			int vIndex = all.indexOf(v); 
+			if(vIndex==-1) continue;
+			
+			in.add(all.get(vIndex));
+			
 		}
-		return this;
+		
+		return from(in);
 	}
-	public <TInArr> Query<T> in(TInArr... values) {
+	public Query<T> in(T... values) {
 		return in(Arrays.asList(values));
 	}
 	public <TInArr> Query<T> in(String method, TInArr... values) {
 		return in(method, Arrays.asList(values));
 	}
+	
 	public <TInArr> Query<T> in(String method, Collection<TInArr> values) {
-		//Query<T> ret = this;
-		for (Object v : values) {
-			Criteria<T> criteria = new Criteria<T>(method, eq(v));
-			criteria.setSpecification(new OrSpecification<T>());
-			criterias.add(criteria);
+		List<T> allValues = from(collection).all();
+		List<T> in = new ArrayList<T>();
+		
+		for (T v : allValues) {
+			T sourceValue = (T) Phanton.from(v).call(method);
 
-			//ret = ret.or(method, eq(v));
+			if(!values.contains(sourceValue))continue;
+			
+			in.add(v);
+			
 		}
-		return this;
+		
+		return from(in);
 	}
 	public Query<T> where(String method, Matcher matcher) {
 		Criteria<T> criteria = new Criteria<T>(method, matcher);
@@ -141,7 +151,6 @@ public class Query<T> {
 	}
 
 	
-	@Deprecated
 	@SuppressWarnings("unchecked")
 	public <TSub> Query<TSub> select (String method) {
 		List<TSub> select = new ArrayList<TSub>();
