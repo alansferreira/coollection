@@ -1,6 +1,6 @@
 package org.simple.coollection.test;
 
-import static org.simple.coollection.Coollection.from;
+import static org.simple.coollection.Coollection.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +30,7 @@ public class InTest {
 		for (String brotherName : brothersNames) {
 			System.out.println(brotherName);
 		}
-		assert brothersNames!=null && !brothersNames.isEmpty();
+		assert brothersNames!=null && !brothersNames.isEmpty() && brothersNames.size()==2;
 		
 	}
 	
@@ -45,8 +45,16 @@ public class InTest {
 		for (PetAnimal brother : brothers) {
 			System.out.println(brother.getName());
 		}
-		assert brothers!=null && !brothers.isEmpty();
 		
+		assert brothers!=null && !brothers.isEmpty() && brothers.size()==3;
+		assert from(brothers).where("name", eq("mila")).first().getName().equals("mila");
+		assert from(brothers).where("name", eq("brutus")).first().getName().equals("brutus");
+		assert from(brothers).where("name", eq("mani")).first().getName().equals("mani");
+
+		assert from(brothers).where("name", eq("mila")).all().size()==1;
+		assert from(brothers).where("name", eq("brutus")).all().size()==1;
+		assert from(brothers).where("name", eq("mani")).all().size()==1;
+
 	}
 
 }

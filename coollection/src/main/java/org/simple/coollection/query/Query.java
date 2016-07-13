@@ -50,7 +50,7 @@ public class Query<T> {
 				T right = (v != null ? sub : v); 
 				
 				if(left.getClass().isAssignableFrom(String.class)){
-					if (left.toString().equalsIgnoreCase(right.toString())) in.add(v);
+					if (left.toString().trim().equalsIgnoreCase(right.toString().trim())) in.add(v);
 					
 				}else{
 					if (left.equals(right)) in.add(v);
@@ -71,24 +71,29 @@ public class Query<T> {
 	}
 	
 	public <TInArr> Query<T> in(String method, Collection<TInArr> values) {
-		List<T> allValues = from(collection).all();
+		List<T> all = cloneCollection(collection);
 		List<T> in = new ArrayList<T>();
-
-		Class<?> contentsType = null;
+		List<TInArr> valuesCopy = from(values).all();
 		
-		TInArr firstSample = from(allValues).<TInArr>select(method).first();
-		if(firstSample!=null) contentsType = firstSample.getClass();
-		
-		for (TInArr v : values) {
+		for (TInArr sub : valuesCopy) {
 			
-			List<T> founded = null;
-			if(contentsType.isAssignableFrom(String.class)){
-				founded = from(allValues).where(method, eqIgnoreCase(v.toString())).all();
-			}else{
-				founded = from(allValues).where(method, eq(v)).all();
+			for (T v : all) {
+				
+				TInArr v1 = (TInArr) Phanton.from(v).call(method);
+				if (v1 == null && sub == null) continue;
+				
+				TInArr left = (v1 != null ? v1 : sub); 
+				TInArr right = (v1 != null ? sub : v1); 
+				
+				if(left.getClass().isAssignableFrom(String.class)){
+					if (left.toString().trim().equalsIgnoreCase(right.toString().trim())) in.add(v);
+					
+				}else{
+					if (left.equals(right)) in.add(v);
+				}
 			}
 			
-			in.addAll(founded);
+			all.removeAll(in);
 			
 		}
 
