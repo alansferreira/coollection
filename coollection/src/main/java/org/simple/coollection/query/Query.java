@@ -141,6 +141,7 @@ public class Query<T> {
 	}
 
 	
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public <TSub> Query<TSub> select (String method) {
 		List<TSub> select = new ArrayList<TSub>();
@@ -154,7 +155,20 @@ public class Query<T> {
 		}
 		return from(select);
 	}
-	
+	@SuppressWarnings("unchecked")
+	public <TSub> Query<TSub> select (String method, Class<TSub> returnType) {
+		List<TSub> select = new ArrayList<TSub>();
+		for (T t : all()) {
+			try {
+				select.addAll((Collection<TSub>) Phanton.from(t).call(method));
+			}
+			catch (Exception e) {
+				select.add((TSub) Phanton.from(t).call(method));				
+			}
+		}
+		return from(select);
+	}
+
 	public void set(String method, Object newValue) {
 		for (T t : all()) {
 			Phanton.from(t).set(method, newValue);
