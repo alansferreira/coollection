@@ -2,11 +2,8 @@ package org.simple.coollection.query;
 
 
 
-import static org.simple.coollection.Coollection.eq;
-import static org.simple.coollection.Coollection.eqIgnoreCase;
 import static org.simple.coollection.Coollection.from;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -237,12 +234,35 @@ public class Query<T> {
 	public Query<T> distinct(String distinctBy) {
 		HashMap<Object, T> distinct = new HashMap<Object, T>();
 		
-		for (T t : all()) {
-			Object v = (Object) Phanton.from(t).call(distinctBy);
+		for (T element : all()) {
+			Object elementValue = (Object) Phanton.from(element).call(distinctBy);
 			
-			if(distinct.containsKey(v)) continue;
+			if(distinct.containsKey(elementValue)) continue;
 			
-			distinct.put(v, t);
+			distinct.put(elementValue, element);
+		}
+		return (Query<T>) from(distinct.values());
+	}
+	public Query<T> distinctString(String distinctBy) {
+		return distinctString(distinctBy, true, true);
+	}
+	public Query<T> distinctString(String distinctBy, boolean ignoreCase, boolean trimValues) {
+		HashMap<Object, T> distinct = new HashMap<Object, T>();
+		for (T element : all()) {
+			String elementValue = (String) Phanton.from(element).call(distinctBy);
+			
+			if(elementValue!=null){
+
+				if(trimValues && ignoreCase) elementValue = elementValue.trim().toUpperCase();
+				if(ignoreCase) elementValue = elementValue.toUpperCase();
+				if(trimValues) elementValue = elementValue.trim();
+				
+			}
+
+			
+			if(distinct.containsKey(elementValue)) continue;
+			
+			distinct.put(elementValue, element);
 		}
 		return (Query<T>) from(distinct.values());
 	}

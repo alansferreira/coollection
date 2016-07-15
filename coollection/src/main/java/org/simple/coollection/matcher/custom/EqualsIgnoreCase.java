@@ -1,18 +1,11 @@
 package org.simple.coollection.matcher.custom;
 
-import org.simple.coollection.matcher.Matcher;
+public class EqualsIgnoreCase extends EqualsString{
 
-public class EqualsIgnoreCase implements Matcher {
-
-	private final String value;
 
 	public EqualsIgnoreCase(String value) {
-		this.value = value;
+		super(value, true, false);
 	}
 
-	public boolean match(Object anotherValue) {
-		if(value==null || anotherValue==null) return value == anotherValue;
-		return (value).equalsIgnoreCase((String)anotherValue);
-	}
 
 }
