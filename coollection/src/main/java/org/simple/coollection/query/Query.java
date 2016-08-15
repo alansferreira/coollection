@@ -1,3 +1,5 @@
+
+
 package org.simple.coollection.query;
 
 
@@ -9,6 +11,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,23 +27,30 @@ import org.simple.coollection.reflection.Phanton;
 
 public class Query<T> {
 
-	private final Collection<T> collection;
+	private final Iterable<T> collection;
 	private CriteriaList<T> criterias;
 	private OrderCriteria<T> orderCriteria;
 	
-	public Query(Collection<T> collection) {
+	public Iterator<T> getCollectionIterator(){
+		return collection.iterator();
+	}
+	
+	public Query(Iterable<T> collection) {
 		this.collection = collection;
 		criterias = new CriteriaList<T>();
 	}
 
-	public Query<T> in(Collection<T> values) {
-		List<T> all = cloneCollection(collection);
-		List<T> in = new ArrayList<T>();
-		List<T> valuesCopy = cloneCollection(values);
+	public Query<T> in(Iterable<T> values) {
+		HashSet<T> in = new HashSet<T>();
 		
-		for (T sub : valuesCopy) {
+		Iterator<T> valuesIterator = values.iterator();
+		while(valuesIterator.hasNext()){
+			T sub = valuesIterator.next();
 			
-			for (T v : all) {
+			Iterator<T> allIterator = getCollectionIterator();
+			while(allIterator.hasNext()){
+				T v = allIterator.next();
+			
 				if (v == null && sub == null) continue;
 				
 				T left = (v != null ? v : sub); 
@@ -54,7 +64,6 @@ public class Query<T> {
 				}
 			}
 			
-			all.removeAll(in);
 			
 		}
 		
@@ -67,14 +76,16 @@ public class Query<T> {
 		return in(method, Arrays.asList(values));
 	}
 	
-	public <TInArr> Query<T> in(String method, Collection<TInArr> values) {
-		List<T> all = cloneCollection(collection);
-		List<T> in = new ArrayList<T>();
-		List<TInArr> valuesCopy = from(values).all();
+	public <TInArr> Query<T> in(String method, Iterable<TInArr> values) {
+		HashSet<T> in = new HashSet<T>();
 		
-		for (TInArr sub : valuesCopy) {
+		Iterator<TInArr> valuesIterator = values.iterator();
+		while(valuesIterator.hasNext()){
+			TInArr sub = valuesIterator.next();
 			
-			for (T v : all) {
+			Iterator<T> allIterator = getCollectionIterator();
+			while(allIterator.hasNext()){
+				T v = allIterator.next();
 				
 				TInArr v1 = (TInArr) Phanton.from(v).call(method);
 				if (v1 == null && sub == null) continue;
@@ -89,8 +100,6 @@ public class Query<T> {
 					if (left.equals(right)) in.add(v);
 				}
 			}
-			
-			all.removeAll(in);
 			
 		}
 
@@ -126,6 +135,8 @@ public class Query<T> {
 	}
 
 	public List<T> all() {
+		
+		
 		List<T> all = new ArrayList<T>();
 		for(T item : collection) {
 			if(item==null)continue;
@@ -151,6 +162,18 @@ public class Query<T> {
 		}
 		return null;
 	}
+	public T last() {
+		List<T> all = cloneCollection(collection);
+		if(orderCriteria != null) {
+			all = orderCriteria.sort(all);
+		}
+		
+		T last = null;
+		for(T item : all) {
+			if(criterias.match(item)) last = item;
+		}
+		return last;
+	}
 
 	public List<T> firstOccours(int occours) {
 		List<T> all = cloneCollection(collection);
@@ -167,7 +190,7 @@ public class Query<T> {
 		return list;
 	}
 
-	private List<T> cloneCollection(Collection<T> collection) {
+	private List<T> cloneCollection(Iterable<T> collection) {
 		List<T> list = new ArrayList<T>();
 		for(T item : collection) {
 			if(item==null)continue;
@@ -277,5 +300,13 @@ public class Query<T> {
 			catch (Exception e) {}
 		}
 		return (double) sum;
+	}
+
+	public CriteriaList<T> getCriterias() {
+		return criterias;
+	}
+
+	public OrderCriteria<T> getOrderCriteria() {
+		return orderCriteria;
 	}
 }

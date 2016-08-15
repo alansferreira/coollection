@@ -1,6 +1,5 @@
 package org.simple.coollection;
 
-import java.util.Collection;
 import org.simple.coollection.matcher.Matcher;
 import org.simple.coollection.matcher.custom.Contains;
 import org.simple.coollection.matcher.custom.EndsWith;
@@ -19,9 +18,9 @@ import org.simple.coollection.query.Query;
 
 public class Coollection {
 
-	public static <T> Query<T> from(Collection<T> collection) {
+	public static <T> Query<T> from(Iterable<T> iterable) {
 		
-		return new Query<T>(collection);
+		return new Query<T>(iterable);
 	}
 	
 	public static Matcher eq(Object value) {
