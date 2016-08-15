@@ -19,7 +19,9 @@ import org.simple.coollection.query.Query;
 public class Coollection {
 
 	public static <T> Query<T> from(Iterable<T> iterable) {
-		
+		return new Query<T>(iterable);
+	}
+	public static <T> Query<T> from(T[] iterable) {
 		return new Query<T>(iterable);
 	}
 	

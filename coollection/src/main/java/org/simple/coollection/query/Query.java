@@ -35,6 +35,11 @@ public class Query<T> {
 		return collection.iterator();
 	}
 	
+	public Query(T[] collection) {
+		this.collection = Arrays.asList(collection);
+		criterias = new CriteriaList<T>();
+	}
+
 	public Query(Iterable<T> collection) {
 		this.collection = collection;
 		criterias = new CriteriaList<T>();
