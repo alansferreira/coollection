@@ -2,10 +2,9 @@ package org.simple.coollection.test;
 
 import static org.simple.coollection.Coollection.from;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.simple.coollection.IEnumerable;
 import org.simple.coollection.test.pojos.Cat;
 import org.simple.coollection.test.pojos.Dog;
 import org.simple.coollection.test.pojos.PetShop;
@@ -22,7 +21,7 @@ public class DistinctTest {
 
 	@Test
 	public void distinctSpecies() {
-		List<String> allSpecies = from(myPet.getAnimalsStore()).distinct("getSpecies").<String>select("getSpecies").all();
+		IEnumerable<String> allSpecies = from(myPet.getAnimalsStore()).distinct("getSpecies").<String>select("getSpecies").all();
 		for (String species : allSpecies) {
 			System.out.println(species);
 		}

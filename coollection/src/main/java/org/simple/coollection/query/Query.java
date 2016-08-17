@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.simple.coollection.Enumerable;
+import org.simple.coollection.IEnumerable;
 import org.simple.coollection.matcher.Matcher;
 import org.simple.coollection.query.criteria.Criteria;
 import org.simple.coollection.query.criteria.CriteriaList;
@@ -24,24 +26,19 @@ import org.simple.coollection.query.specification.custom.AndSpecification;
 import org.simple.coollection.query.specification.custom.OrSpecification;
 import org.simple.coollection.reflection.Phanton;
 
-
 public class Query<T> {
 
-	private final Iterable<T> collection;
+	private final IEnumerable<T> collection;
 	private CriteriaList<T> criterias;
 	private OrderCriteria<T> orderCriteria;
 	
-	public Iterator<T> getCollectionIterator(){
-		return collection.iterator();
-	}
-	
 	public Query(T[] collection) {
-		this.collection = Arrays.asList(collection);
+		this.collection = new Enumerable<T>(Arrays.asList(collection));
 		criterias = new CriteriaList<T>();
 	}
 
-	public Query(Iterable<T> collection) {
-		this.collection = collection;
+	public Query(Iterable<T> iterable) {
+		this.collection = new Enumerable<T>(iterable);
 		criterias = new CriteriaList<T>();
 	}
 
@@ -52,7 +49,7 @@ public class Query<T> {
 		while(valuesIterator.hasNext()){
 			T sub = valuesIterator.next();
 			
-			Iterator<T> allIterator = getCollectionIterator();
+			Iterator<T> allIterator = collection.iterator();
 			while(allIterator.hasNext()){
 				T v = allIterator.next();
 			
@@ -88,7 +85,7 @@ public class Query<T> {
 		while(valuesIterator.hasNext()){
 			TInArr sub = valuesIterator.next();
 			
-			Iterator<T> allIterator = getCollectionIterator();
+			Iterator<T> allIterator = collection.iterator();
 			while(allIterator.hasNext()){
 				T v = allIterator.next();
 				
@@ -130,30 +127,60 @@ public class Query<T> {
 		return this;
 	}
 	
-	public Query<T> orderBy(String method, Order order) {
+	public IEnumerable<T> orderBy(String method, Order order) {
 		orderCriteria = new OrderCriteria<T>(method, order);
-		return this;
+		
+		//TODO this method should be re-implemented to sort dynamic Iterators instead of memory List 
+		return new Enumerable<T>(orderCriteria.sort(all().asList()));
 	}
 
-	public Query<T> orderBy(String method) {
+	public IEnumerable<T> orderBy(String method) {
 		return orderBy(method, Order.ASC);
 	}
 
-	public List<T> all() {
-		
-		
-		List<T> all = new ArrayList<T>();
-		for(T item : collection) {
-			if(item==null)continue;
-
-			if(criterias.match(item)) {
-				all.add(item);
+	private Iterator<T> newIterator(){
+		return new Iterator<T>() {
+			T currentTtem = null;
+			Iterator<T> collectionIterator = collection.iterator();
+			public boolean hasNext() {
+				while(collectionIterator.hasNext()){
+					currentTtem = collectionIterator.next();
+					if(currentTtem==null)continue;
+					
+					if(criterias.match(currentTtem)) return true;
+				}
+				
+				currentTtem = null;
+				return false;
 			}
-		}
-		if(orderCriteria != null) {
-			all = orderCriteria.sort(all);
-		}
-		return all;
+			public T next() {
+				return currentTtem;
+			}
+
+		};
+
+	}
+	public IEnumerable<T> all() {
+		
+		return new Enumerable<T>(newIterator()) {
+			public void reset() {
+				currentIterator = newIterator(); 
+			}
+		};
+		
+		
+		//for(T item : collection) {
+		//	if(item==null)continue;
+        //
+		//	if(criterias.match(item)) {
+		//		all.add(item);
+		//	}
+		//}
+		//if(orderCriteria != null) {
+		//	all = orderCriteria.sort(all);
+		//}
+		
+		//return all;
 	}
 	public T first() {
 		List<T> all = cloneCollection(collection);

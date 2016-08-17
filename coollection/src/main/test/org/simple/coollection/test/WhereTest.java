@@ -3,10 +3,9 @@ package org.simple.coollection.test;
 import static org.simple.coollection.Coollection.eqIgnoreCase;
 import static org.simple.coollection.Coollection.from;
 
-import java.util.List;
-
 import org.junit.Before;
 import org.junit.Test;
+import org.simple.coollection.IEnumerable;
 import org.simple.coollection.test.pojos.Cat;
 import org.simple.coollection.test.pojos.Dog;
 import org.simple.coollection.test.pojos.PetAnimal;
@@ -24,7 +23,7 @@ public class WhereTest {
 
 	@Test
 	public void listAllCats() {
-		List<PetAnimal> allCats = from(myPet.getAnimalsStore()).where("getSpecies", eqIgnoreCase("cat")).all();
+		IEnumerable<PetAnimal> allCats = from(myPet.getAnimalsStore()).where("getSpecies", eqIgnoreCase("cat")).all();
 		for (PetAnimal animal : allCats) {
 			System.out.println("Cat: " + animal.getName());
 		}
@@ -42,15 +41,17 @@ public class WhereTest {
 
 	@Test
 	public void allCatsWithName() {
-		List<PetAnimal> cats = from(myPet.getAnimalsStore())
+		IEnumerable<PetAnimal> cats = from(myPet.getAnimalsStore())
 				.where("getSpecies", eqIgnoreCase("cat"))
 				.and("name", eqIgnoreCase("kila")).all();
 		
 		for (PetAnimal cat : cats) {
 			System.out.println(cat.getName());
 		}
-
-		PetAnimal kila = cats.get(0);
+		
+		cats.reset();
+		cats.hasNext();
+		PetAnimal kila = cats.next();
 		
 		assert kila.getSpecies()=="cat" && kila.getName().equalsIgnoreCase("kila");
 		
@@ -58,7 +59,7 @@ public class WhereTest {
 
 	@Test
 	public void allCatsOrCatsWithName() {
-		List<PetAnimal> cats = from(myPet.getAnimalsStore())
+		IEnumerable<PetAnimal> cats = from(myPet.getAnimalsStore())
 				.where("getSpecies", eqIgnoreCase("cat"))
 				.or("name", eqIgnoreCase("kila")).all();
 		

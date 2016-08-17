@@ -14,6 +14,7 @@ public class OrderCriteria<T> {
 	}
 	
 	public List<T> sort(List<T> list) {
+		//TODO this method should be re-implemented to sort dynamic Iterators instead of memory List 
 		Collections.sort(list, new OrderComparator<T>(method));
 		if(order == Order.DESC) {
 			Collections.reverse(list);
