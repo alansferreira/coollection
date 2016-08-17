@@ -2,6 +2,7 @@ package org.simple.coollection;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,6 +23,9 @@ public class Enumerable<T> implements IEnumerable<T>{
 		
 	}
 	
+	public Enumerable(T[] array) {
+		this(Arrays.asList(array));
+	}
 	/**
 	 * renew, reset and return current iterator
 	 */
@@ -65,6 +69,10 @@ public class Enumerable<T> implements IEnumerable<T>{
 	public boolean isEmpty() {
 		return !iterator().hasNext();
 	}
+	
+	/**
+	 * renew the iterator object
+	 */
 	public void reset() {
 		currentIterator = baseIterable.iterator();
 	}
