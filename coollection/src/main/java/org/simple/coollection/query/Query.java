@@ -2,17 +2,14 @@ package org.simple.coollection.query;
 
 
 
-import static org.simple.coollection.Coollection.eq;
-import static org.simple.coollection.Coollection.from;
 
+import static org.simple.coollection.Coollection.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
 import org.simple.coollection.matcher.Matcher;
 import org.simple.coollection.query.criteria.Criteria;
 import org.simple.coollection.query.criteria.CriteriaList;
@@ -21,7 +18,6 @@ import org.simple.coollection.query.order.OrderCriteria;
 import org.simple.coollection.query.specification.custom.AndSpecification;
 import org.simple.coollection.query.specification.custom.OrSpecification;
 import org.simple.coollection.reflection.Phanton;
-
 
 public class Query<T> {
 
@@ -61,9 +57,11 @@ public class Query<T> {
 		
 		return from(in);
 	}
+	
 	public Query<T> in(T... values) {
 		return in(Arrays.asList(values));
 	}
+	
 	public <TInArr> Query<T> in(String method, TInArr... values) {
 		return in(method, Arrays.asList(values));
 	}
@@ -141,6 +139,7 @@ public class Query<T> {
 		}
 		return all;
 	}
+	
 	public T first() {
 		List<T> all = cloneCollection(collection);
 		if(orderCriteria != null) {
@@ -163,7 +162,6 @@ public class Query<T> {
 		}
 		return list;
 	}
-
 	
 	public <TSub> Query<TSub> select (String method) {
 		List<TSub> select = new ArrayList<TSub>();
@@ -183,6 +181,7 @@ public class Query<T> {
 			Phanton.from(t).set(method, newValue);
 		}
 	}
+	
 	public Map<Object, List<T>> groupBy(String groupBy) {
 		Map<Object, List<T>> groups = new HashMap<Object, List<T>>(); 
 		for (T t : all()) {
@@ -205,6 +204,7 @@ public class Query<T> {
 		}
 		return (Query<T>) from(distinct.values());
 	}
+	
 	public double sum(String sumBy) {
 		Double sum = 0D;
 		
@@ -216,5 +216,20 @@ public class Query<T> {
 			catch (Exception e) {}
 		}
 		return (double) sum;
+	}
+	
+	public Query<T> max(String maxBy){
+		Double max = 0D;
+		for (T t : all()) {
+			Object v = (Object) Phanton.from(t).call(maxBy);
+			try {
+				if(max < Double.valueOf(v.toString())) {
+					max = Double.valueOf(v.toString());
+				}
+			}
+			catch (Exception e) {}
+		}
+
+		return (Query<T>) where(maxBy, eq(max));
 	}
 }
