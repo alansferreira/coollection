@@ -20,26 +20,12 @@ public class MaxTest {
 		myPet.getAnimalsStore().add(new Cat("kila", "4", 1000d));
 		myPet.getAnimalsStore().add(new Cat("mani", "4", 1000d));
 	}
-
-	@Test
-	public void distinctSpecies() {
-		List<PetAnimal> maxPedgree = from(myPet.getAnimalsStore()).max("price").all();
-		for (PetAnimal species : maxPedgree) {
-			System.out.println(species.getName());
-			System.out.println(species.getPrice());
-		}
-		assert maxPedgree!=null && !maxPedgree.isEmpty();
-		
-	}
 	
 	@Test
 	public void distinctSpecies1() {
-		PetAnimal maxPedgree = from(myPet.getAnimalsStore()).max("price").first();
-		
-			System.out.println(maxPedgree.getName());
-			System.out.println(maxPedgree.getPrice());
-			
-		assert maxPedgree!=null;
+		Double value = from(myPet.getAnimalsStore()).maxValue("price",Double.class);
+		System.out.println(value);	
+		assert value != null;
 		
 	}
 

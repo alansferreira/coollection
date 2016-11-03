@@ -218,18 +218,18 @@ public class Query<T> {
 		return (double) sum;
 	}
 	
-	public Query<T> max(String maxBy){
-		Double max = 0D;
-		for (T t : all()) {
-			Object v = (Object) Phanton.from(t).call(maxBy);
-			try {
-				if(max < Double.valueOf(v.toString())) {
-					max = Double.valueOf(v.toString());
-				}
-			}
-			catch (Exception e) {}
-		}
-
-		return (Query<T>) where(maxBy, eq(max));
-	}
+   public <TSub> TSub maxValue(String maxBy, Class<TSub> maxByType) {
+       Comparable<Object> max = (Comparable<Object>)select(maxBy).first();
+       if(max==null) return null;
+	       
+       for (T t : all()) {
+           Comparable<Object> v = (Comparable<Object>) Phanton.from(t).call(maxBy);
+           try {
+               if (max.compareTo(v)==-1) { max = v;}
+           } catch (Exception e) {
+           }
+       }
+	 
+       return (TSub)max;
+   }
 }
