@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.simple.coollection.matcher.Matcher;
+import org.simple.coollection.reflection.Utils;
 
 public class In implements Matcher {
 
@@ -21,7 +22,9 @@ public class In implements Matcher {
 
 	@SuppressWarnings("unchecked")
 	public boolean match(Object value) {
+		
 		int foundedIndex =0;
+		
 		if(value.getClass().isAssignableFrom(String.class)){
 			foundedIndex = Arrays.binarySearch(matcherValues, value, new Comparator<Object>() {
 				public int compare(Object o1, Object o2) {
@@ -36,7 +39,7 @@ public class In implements Matcher {
 				public int compare(Object o1, Object o2) {
 					if(o1==null && o2==null) return 0;
 					if(o1==null) return 1;
-					return ((Comparable<Object>)o1).compareTo(o2);
+					return ((Comparable<Object>)o1).compareTo(Utils.castValue(o2, o1.getClass()));
 				}
 			});
 		}		

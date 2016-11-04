@@ -91,4 +91,23 @@ public class InTest {
 
 	}
 
+	
+	@Test
+	public void testInPrimitive() {
+
+		List<Long> list = from(Arrays.asList(new Long[] { 1l, 2l, 3l, 4l })).in(1l, 3l).all();
+		System.out.println(list.size());
+		assert list.size() == 2;
+
+	}
+
+	@Test
+	public void testInCast() {
+
+		List<Long> list = from(Arrays.asList(new Long[] { 1l, 2l, 3l, 4l })).in("1", "3").all();
+		System.out.println(list.size());
+		assert list.size() == 2;
+
+	}
+
 }

@@ -1,7 +1,8 @@
 package org.simple.coollection.test;
  
 import static org.simple.coollection.Coollection.from;
- 
+
+import java.util.Arrays;
 import java.util.List;
  
 import org.junit.Before;
@@ -61,5 +62,14 @@ public class MaxTest {
        assert maxPedgree!=null && !maxPedgree.isEmpty();
        
    }
- 
+
+   @Test
+	public void testMaxPrimitive() {
+
+		List<Long> list = from(Arrays.asList(new Long[] { 1l, 2l, 3l, 4l, 4l })).max().all();
+		System.out.println(list.size());
+		assert list.size() == 2;
+
+	}
+
 }

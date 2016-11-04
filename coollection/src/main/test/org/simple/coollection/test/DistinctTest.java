@@ -2,6 +2,7 @@ package org.simple.coollection.test;
 
 import static org.simple.coollection.Coollection.from;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -28,6 +29,15 @@ public class DistinctTest {
 		}
 		assert allSpecies!=null && !allSpecies.isEmpty();
 		
+	}
+	   
+	@Test
+	public void testDistinctPrimitive() {
+
+		List<Long> list = from(Arrays.asList(new Long[] { 1l, 1l, 2l, 2l, 3l, 3l, 4l, 4l })).distinct().all();
+		System.out.println(list.size());
+		assert list.size() == 4;
+
 	}
 
 }

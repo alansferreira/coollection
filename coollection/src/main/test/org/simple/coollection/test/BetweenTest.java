@@ -1,7 +1,8 @@
 package org.simple.coollection.test;
  
 import static org.simple.coollection.Coollection.*;
- 
+
+import java.util.Arrays;
 import java.util.List;
  
 import org.junit.Before;
@@ -29,6 +30,15 @@ public class BetweenTest {
    public void testBetween() {
        
        List<PetAnimal> list = from(myPet.getAnimalsStore()).where("price", between(1d, 2d)).all();
+       System.out.println(list.size());
+       assert list != null;
+       
+   }
+
+   @Test
+   public void testBetweenPrimitive() {
+       
+       List<Long> list = from(Arrays.asList(new Long[]{1l,2l,3l,4l})).between(2l, 4l).all();
        System.out.println(list.size());
        assert list != null;
        

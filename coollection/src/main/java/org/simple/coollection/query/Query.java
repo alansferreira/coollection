@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.simple.coollection.Coollection;
 import org.simple.coollection.matcher.Matcher;
 import org.simple.coollection.query.criteria.Criteria;
 import org.simple.coollection.query.criteria.CriteriaList;
@@ -31,6 +32,55 @@ public class Query<T> {
 		this.collection = collection;
 		criterias = new CriteriaList<T>();
 	}
+	
+	public Query<T> between(Object min, Object max) {
+		return between("$", min, max);
+	}
+	public Query<T> between(String expression, Object min, Object max) {
+		return where(expression, Coollection.between(min, max));
+	}
+
+	public Query<T> in(Object... values) {
+		return where("$", Coollection.in(values));
+	}
+	public Query<T> in(List<Object> values) {
+		return where("$", Coollection.in(values));
+	}
+	
+	public Query<T> where(Matcher matcher) {
+		return where("$", matcher);
+	}
+	public Query<T> and(Matcher matcher) {
+		return and("$", matcher);
+	}
+
+	public Query<T> or(Matcher matcher) {
+		return or("$", matcher);
+	}
+	
+	public Query<T> orderBy(Order order) {
+		return orderBy("$", order);
+	}
+
+	public Query<T> distinct() {
+		HashSet<T> distinct = new HashSet<T>();
+		
+		for (T t : all()) {
+			distinct.add(t);
+		}
+		
+		return (Query<T>) from(distinct);
+	}
+
+	public double sum() {
+		return sum("$");
+	}
+
+	public Query<T> max() {
+		return max("$", Object.class);
+	}
+	
+	
 	
 	public Query<T> each(CallbackEach<T> callback) {
 		List<T> all = cloneCollection(collection);
@@ -96,6 +146,7 @@ public class Query<T> {
 		}
 		return all;
 	}
+	
 	public T first() {
 		List<T> all = cloneCollection(collection);
 		if(orderCriteria != null) {
@@ -148,6 +199,7 @@ public class Query<T> {
 		}
 		return from(select);
 	}
+	
 	@SuppressWarnings("unchecked")
 	public <TSub> Query<TSub> select (String method, Class<TSub> returnType) {
 		List<TSub> select = new ArrayList<TSub>();
@@ -167,6 +219,7 @@ public class Query<T> {
 			Phanton.from(t).set(method, newValue);
 		}
 	}
+	
 	public Map<Object, List<T>> groupBy(String groupBy) {
 		Map<Object, List<T>> groups = new HashMap<Object, List<T>>(); 
 		for (T t : all()) {
@@ -179,15 +232,6 @@ public class Query<T> {
 		return groups;
 	}
 
-	public Query<T> distinct() {
-		HashSet<T> distinct = new HashSet<T>();
-		
-		for (T t : all()) {
-			distinct.add(t);
-		}
-		
-		return (Query<T>) from(distinct);
-	}
 	public Query<T> distinct(String distinctBy) {
 		HashMap<Object, T> distinct = new HashMap<Object, T>();
 		
@@ -200,9 +244,11 @@ public class Query<T> {
 		}
 		return (Query<T>) from(distinct.values());
 	}
+	
 	public Query<T> distinctString(String distinctBy) {
 		return distinctString(distinctBy, true, true);
 	}
+	
 	public Query<T> distinctString(String distinctBy, boolean ignoreCase, boolean trimValues) {
 		HashMap<Object, T> distinct = new HashMap<Object, T>();
 		for (T element : all()) {
@@ -223,6 +269,7 @@ public class Query<T> {
 		}
 		return (Query<T>) from(distinct.values());
 	}
+	
 	public double sum(String sumBy) {
 		Double sum = 0D;
 		

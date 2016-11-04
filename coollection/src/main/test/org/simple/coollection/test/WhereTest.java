@@ -1,8 +1,9 @@
 package org.simple.coollection.test;
 
-import static org.simple.coollection.Coollection.eqIgnoreCase;
-import static org.simple.coollection.Coollection.from;
 
+import static org.simple.coollection.Coollection.*;
+
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -39,7 +40,6 @@ public class WhereTest {
 		assert cat!=null && cat.getSpecies()=="cat";
 		
 	}
-
 	@Test
 	public void allCatsWithName() {
 		List<PetAnimal> cats = from(myPet.getAnimalsStore())
@@ -68,6 +68,15 @@ public class WhereTest {
 
 		assert cats.size()>1;
 		
+	}
+
+	@Test
+	public void testWherePrimitive() {
+
+		List<Long> list = from(Arrays.asList(new Long[] { 1l, 2l, 3l, 4l })).where(eq(1l)).all();
+		System.out.println(list.size());
+		assert list.size() == 1;
+
 	}
 
 }
