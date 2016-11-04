@@ -15,7 +15,7 @@ import org.simple.coollection.query.criteria.CriteriaList;
 import org.simple.coollection.query.order.Order;
 import org.simple.coollection.query.order.OrderCriteria;
 import org.simple.coollection.query.specification.custom.AndSpecification;
-import org.simple.coollection.query.specification.custom.OrSpecification;
+import org.simple.coollection.query.specification.custom.OrSpecification;	
 import org.simple.coollection.reflection.Phanton;
 
 public class Query<T> {
