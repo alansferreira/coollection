@@ -1,15 +1,14 @@
 package org.simple.coollection.query;
 
+import static org.simple.coollection.Coollection.from;
 
-
-
-import static org.simple.coollection.Coollection.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.simple.coollection.matcher.Matcher;
 import org.simple.coollection.query.criteria.Criteria;
 import org.simple.coollection.query.criteria.CriteriaList;
@@ -24,7 +23,7 @@ public class Query<T> {
 	private final Collection<T> collection;
 	private CriteriaList<T> criterias;
 	private OrderCriteria<T> orderCriteria;
-	
+
 	public Query(Collection<T> collection) {
 		this.collection = collection;
 		criterias = new CriteriaList<T>();
@@ -34,68 +33,74 @@ public class Query<T> {
 		List<T> all = cloneCollection(collection);
 		List<T> in = new ArrayList<T>();
 		List<T> valuesCopy = cloneCollection(values);
-		
+
 		for (T sub : valuesCopy) {
-			
+
 			for (T v : all) {
-				if (v == null && sub == null) continue;
-				
-				T left = (v != null ? v : sub); 
-				T right = (v != null ? sub : v); 
-				
-				if(left.getClass().isAssignableFrom(String.class)){
-					if (left.toString().trim().equalsIgnoreCase(right.toString().trim())) in.add(v);
-					
-				}else{
-					if (left.equals(right)) in.add(v);
+				if (v == null && sub == null)
+					continue;
+
+				T left = (v != null ? v : sub);
+				T right = (v != null ? sub : v);
+
+				if (left.getClass().isAssignableFrom(String.class)) {
+					if (left.toString().trim().equalsIgnoreCase(right.toString().trim()))
+						in.add(v);
+
+				} else {
+					if (left.equals(right))
+						in.add(v);
 				}
 			}
-			
+
 			all.removeAll(in);
-			
-		}
-		
-		return from(in);
-	}
-	
-	public Query<T> in(T... values) {
-		return in(Arrays.asList(values));
-	}
-	
-	public <TInArr> Query<T> in(String method, TInArr... values) {
-		return in(method, Arrays.asList(values));
-	}
-	
-	public <TInArr> Query<T> in(String method, Collection<TInArr> values) {
-		List<T> all = cloneCollection(collection);
-		List<T> in = new ArrayList<T>();
-		List<TInArr> valuesCopy = from(values).all();
-		
-		for (TInArr sub : valuesCopy) {
-			
-			for (T v : all) {
-				
-				TInArr v1 = (TInArr) Phanton.from(v).call(method);
-				if (v1 == null && sub == null) continue;
-				
-				TInArr left = (v1 != null ? v1 : sub); 
-				TInArr right = (v1 != null ? sub : v1); 
-				
-				if(left.getClass().isAssignableFrom(String.class)){
-					if (left.toString().trim().equalsIgnoreCase(right.toString().trim())) in.add(v);
-					
-				}else{
-					if (left.equals(right)) in.add(v);
-				}
-			}
-			
-			all.removeAll(in);
-			
+
 		}
 
 		return from(in);
 	}
-	
+
+	public Query<T> in(T... values) {
+		return in(Arrays.asList(values));
+	}
+
+	public <TInArr> Query<T> in(String method, TInArr... values) {
+		return in(method, Arrays.asList(values));
+	}
+
+	public <TInArr> Query<T> in(String method, Collection<TInArr> values) {
+		List<T> all = cloneCollection(collection);
+		List<T> in = new ArrayList<T>();
+		List<TInArr> valuesCopy = from(values).all();
+
+		for (TInArr sub : valuesCopy) {
+
+			for (T v : all) {
+
+				TInArr v1 = (TInArr) Phanton.from(v).call(method);
+				if (v1 == null && sub == null)
+					continue;
+
+				TInArr left = (v1 != null ? v1 : sub);
+				TInArr right = (v1 != null ? sub : v1);
+
+				if (left.getClass().isAssignableFrom(String.class)) {
+					if (left.toString().trim().equalsIgnoreCase(right.toString().trim()))
+						in.add(v);
+
+				} else {
+					if (left.equals(right))
+						in.add(v);
+				}
+			}
+
+			all.removeAll(in);
+
+		}
+
+		return from(in);
+	}
+
 	public Query<T> where(String method, Matcher matcher) {
 		Criteria<T> criteria = new Criteria<T>(method, matcher);
 		criterias.add(criteria);
@@ -115,7 +120,7 @@ public class Query<T> {
 		criterias.add(criteria);
 		return this;
 	}
-	
+
 	public Query<T> orderBy(String method, Order order) {
 		orderCriteria = new OrderCriteria<T>(method, order);
 		return this;
@@ -127,26 +132,27 @@ public class Query<T> {
 
 	public List<T> all() {
 		List<T> all = new ArrayList<T>();
-		for(T item : collection) {
-			if(item==null)continue;
+		for (T item : collection) {
+			if (item == null)
+				continue;
 
-			if(criterias.match(item)) {
+			if (criterias.match(item)) {
 				all.add(item);
 			}
 		}
-		if(orderCriteria != null) {
+		if (orderCriteria != null) {
 			all = orderCriteria.sort(all);
 		}
 		return all;
 	}
-	
+
 	public T first() {
 		List<T> all = cloneCollection(collection);
-		if(orderCriteria != null) {
+		if (orderCriteria != null) {
 			all = orderCriteria.sort(all);
 		}
-		for(T item : all) {
-			if(criterias.match(item)) {
+		for (T item : all) {
+			if (criterias.match(item)) {
 				return item;
 			}
 		}
@@ -155,81 +161,102 @@ public class Query<T> {
 
 	private List<T> cloneCollection(Collection<T> collection) {
 		List<T> list = new ArrayList<T>();
-		for(T item : collection) {
-			if(item==null)continue;
-	
+		for (T item : collection) {
+			if (item == null)
+				continue;
+
 			list.add(item);
 		}
 		return list;
 	}
-	
-	public <TSub> Query<TSub> select (String method) {
+
+	public <TSub> Query<TSub> select(String method) {
 		List<TSub> select = new ArrayList<TSub>();
 		for (T t : all()) {
 			try {
 				select.addAll((Collection<TSub>) Phanton.from(t).call(method));
-			}
-			catch (Exception e) {
-				select.add((TSub) Phanton.from(t).call(method));				
+			} catch (Exception e) {
+				select.add((TSub) Phanton.from(t).call(method));
 			}
 		}
 		return from(select);
 	}
-	
+
 	public void set(String method, Object newValue) {
 		for (T t : all()) {
 			Phanton.from(t).set(method, newValue);
 		}
 	}
-	
+
 	public Map<Object, List<T>> groupBy(String groupBy) {
-		Map<Object, List<T>> groups = new HashMap<Object, List<T>>(); 
+		Map<Object, List<T>> groups = new HashMap<Object, List<T>>();
 		for (T t : all()) {
 			Object v = (Object) Phanton.from(t).call(groupBy);
-			
-			if(!groups.containsKey(v)) groups.put(v, new ArrayList<T>()); 
-			
+
+			if (!groups.containsKey(v))
+				groups.put(v, new ArrayList<T>());
+
 			groups.get(v).add(t);
 		}
 		return groups;
 	}
-	
+
 	public Query<T> distinct(String distinctBy) {
 		HashMap<Object, T> distinct = new HashMap<Object, T>();
 		for (T t : all()) {
 			Object v = (Object) Phanton.from(t).call(distinctBy);
-			if(distinct.containsKey(v)) continue;
-			
+			if (distinct.containsKey(v))
+				continue;
+
 			distinct.put(v, t);
 		}
 		return (Query<T>) from(distinct.values());
 	}
-	
+
+	public Query<T> between(String method, Object min, Object max) {
+		List<T> select = new ArrayList<T>();
+
+		for (T t : all()) {
+			Comparable<Object> v = (Comparable<Object>) Phanton.from(t).call(method);
+
+			if (v instanceof Number) {
+
+				if (v.compareTo(min) >= 0 && v.compareTo(max) <= 0)
+					select.add(t);
+			}
+		}
+
+		return from(select);
+	}
+
 	public double sum(String sumBy) {
 		Double sum = 0D;
-		
+
 		for (T t : all()) {
 			Object v = (Object) Phanton.from(t).call(sumBy);
 			try {
 				sum += Double.valueOf(v.toString());
+			} catch (Exception e) {
 			}
-			catch (Exception e) {}
 		}
 		return (double) sum;
 	}
-	
-   public <TSub> TSub maxValue(String maxBy, Class<TSub> maxByType) {
-       Comparable<Object> max = (Comparable<Object>)select(maxBy).first();
-       if(max==null) return null;
-	       
-       for (T t : all()) {
-           Comparable<Object> v = (Comparable<Object>) Phanton.from(t).call(maxBy);
-           try {
-               if (max.compareTo(v)==-1) { max = v;}
-           } catch (Exception e) {
-           }
-       }
-	 
-       return (TSub)max;
-   }
+
+	public <TSub> TSub maxValue(String maxBy, Class<TSub> maxByType) {
+		Comparable<Object> max = (Comparable<Object>) select(maxBy).first();
+		if (max == null)
+			return null;
+
+		for (T t : all()) {
+			Comparable<Object> v = (Comparable<Object>) Phanton.from(t).call(maxBy);
+			try {
+				if (max.compareTo(v) == -1) {
+					max = v;
+				}
+			} catch (Exception e) {
+			}
+		}
+
+		return (TSub) max;
+	}
 }
