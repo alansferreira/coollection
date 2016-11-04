@@ -1,6 +1,6 @@
 package org.simple.coollection.test;
 
-import static org.simple.coollection.Coollection.from;
+import static org.simple.coollection.Coollection.*;
 
 import java.util.List;
 
@@ -26,11 +26,11 @@ public class BetweenTest {
 	}
 	
 	@Test
-	public void between() {
+	public void betweenTest() {
 		
-		List<PetAnimal> list = from(myPet.getAnimalsStore()).between("price", 1d, 2d).all();
+		List<PetAnimal> list = from(myPet.getAnimalsStore()).where("price",between(1d, 3d)).all();
 		System.out.println(list.size());
-		assert list != null;
+		assert list.size() == 3;
 		
 	}
 

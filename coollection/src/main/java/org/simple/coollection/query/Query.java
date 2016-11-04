@@ -213,22 +213,6 @@ public class Query<T> {
 		return (Query<T>) from(distinct.values());
 	}
 
-	public Query<T> between(String method, Object min, Object max) {
-		List<T> select = new ArrayList<T>();
-
-		for (T t : all()) {
-			Comparable<Object> v = (Comparable<Object>) Phanton.from(t).call(method);
-
-			if (v instanceof Number) {
-
-				if (v.compareTo(min) >= 0 && v.compareTo(max) <= 0)
-					select.add(t);
-			}
-		}
-
-		return from(select);
-	}
-
 	public double sum(String sumBy) {
 		Double sum = 0D;
 
