@@ -213,11 +213,39 @@ public class Query<T> {
 		}
 		return from(select);
 	}
+	public <TSub> Query<TSub> select (final CallbackSelectCast<T, TSub> callback) {
+		final List<TSub> select = new ArrayList<TSub>();
 
-	public void set(String method, Object newValue) {
+		
+		each(new CallbackEach<T>() {
+
+			public boolean each(T item, int index) {
+				
+				select.add(callback.cast(item, index));
+				
+				return true;
+			}
+		});
+		
+		return from(select);
+	}
+
+	public Query<T> set(String method, Object newValue) {
 		for (T t : all()) {
 			Phanton.from(t).set(method, newValue);
 		}
+		
+		return from(all());
+	}
+
+	public Query<T> set(String[] methods, Object[] newValues) {
+		for (T t : all()) {
+			for (int i = 0; i < methods.length; i++) {
+				Phanton.from(t).set(methods[i], newValues[i]);
+			}
+		}
+		
+		return from(all());
 	}
 	
 	public Map<Object, List<T>> groupBy(String groupBy) {
