@@ -177,6 +177,8 @@ public class Query<T> {
 
 	private List<T> cloneCollection(Collection<T> collection) {
 		List<T> list = new ArrayList<T>();
+		if(collection==null) return list;
+		
 		for(T item : collection) {
 			if(item==null)continue;
 	
