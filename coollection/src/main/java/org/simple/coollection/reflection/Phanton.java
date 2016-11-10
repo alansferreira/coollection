@@ -89,6 +89,8 @@ public class Phanton<T> {
 
 		if(nestedNames.length>2){
 			nestedTarget = invoke(name.substring(0, name.lastIndexOf(".")));
+			if(nestedTarget==null) return;
+			
 			nestedTargetClazz = nestedTarget.getClass();
 			nestedNames = new String[]{name.substring(name.lastIndexOf(".")+1)};
 		}
