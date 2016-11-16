@@ -11,17 +11,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.simple.coollection.test.pojos.Cat;
 import org.simple.coollection.test.pojos.Dog;
-import org.simple.coollection.test.pojos.PetAnimal;
 import org.simple.coollection.test.pojos.PetShop;
+import org.simple.coollection.test.pojos.StoreItem;
 
 public class InTest {
 	PetShop myPet = new PetShop();
 	@Before
 	public void setUp() throws Exception {
-		myPet.getAnimalsStore().add(new Dog("brutus", "1", 100d));
-		myPet.getAnimalsStore().add(new Dog("mila", "2", 200d));
-		myPet.getAnimalsStore().add(new Cat("kila", "3", 300d));
-		myPet.getAnimalsStore().add(new Cat("mani", "4", 400d));
+		myPet.getVitrine().add(new Dog("brutus", "1", 100d));
+		myPet.getVitrine().add(new Dog("mila", "2", 200d));
+		myPet.getVitrine().add(new Cat("kila", "3", 300d));
+		myPet.getVitrine().add(new Cat("mani", "4", 400d));
 	}
 
 	@Test
@@ -30,7 +30,7 @@ public class InTest {
 				.select("name", String.class)
 				.in(Arrays.asList(new String[]{"mila", "brutus"})).all();*/
 		
-		List<String> brothersNames = from(myPet.getAnimalsStore())
+		List<String> brothersNames = from(myPet.getVitrine())
 				.where("name", in("mila", "brutus"))
 				.select("name", String.class)
 				.all();
@@ -39,7 +39,7 @@ public class InTest {
 		}
 		assert brothersNames!=null && !brothersNames.isEmpty() && brothersNames.size()==2;
 
-		brothersNames = from(myPet.getAnimalsStore())
+		brothersNames = from(myPet.getVitrine())
 				.where("name", in(Arrays.asList("mila", "brutus")))
 				.select("name", String.class)
 				.all();
@@ -56,11 +56,11 @@ public class InTest {
 				.select("name", String.class)
 				.in(Arrays.asList(new String[]{"mila", "brutus"})).all();*/
 		
-		List<PetAnimal> brothers = from(myPet.getAnimalsStore())
-				.where("price", in(100d, 300d))
+		List<StoreItem> brothers = from(myPet.getVitrine())
+				.where("unitPrice", in(100d, 300d))
 				.all();
 		
-		for (PetAnimal brother : brothers) {
+		for (StoreItem brother : brothers) {
 			System.out.println(brother.getName());
 		}
 		
@@ -71,12 +71,12 @@ public class InTest {
 
 	@Test
 	public void inFieldName() {
-		 List<PetAnimal> brothers = from(myPet.getAnimalsStore())
+		 List<StoreItem> brothers = from(myPet.getVitrine())
 				 .where("name", in("mila", "brutus", "brutus", "mani"))
 				.all();
 		 
 		 
-		for (PetAnimal brother : brothers) {
+		for (StoreItem brother : brothers) {
 			System.out.println(brother.getName());
 		}
 		

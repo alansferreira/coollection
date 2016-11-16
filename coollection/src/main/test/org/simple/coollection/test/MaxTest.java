@@ -11,26 +11,27 @@ import org.simple.coollection.test.pojos.Cat;
 import org.simple.coollection.test.pojos.Dog;
 import org.simple.coollection.test.pojos.PetAnimal;
 import org.simple.coollection.test.pojos.PetShop;
+import org.simple.coollection.test.pojos.StoreItem;
  
 public class MaxTest {
    PetShop myPet = new PetShop();
    @Before
    public void setUp() throws Exception {
-       myPet.getAnimalsStore().add(new Dog("brutus", "1", Double.valueOf(100d)));
-       myPet.getAnimalsStore().add(new Dog("brutus", "5", Double.valueOf(1000d)));
-       myPet.getAnimalsStore().add(new Dog("mila", "2", Double.valueOf(100d)));
-       myPet.getAnimalsStore().add(new Cat("kila", "4", Double.valueOf(1000d)));
-       myPet.getAnimalsStore().add(new Cat("mani", "4", Double.valueOf(1000d)));
+       myPet.getVitrine().add(new Dog("brutus", "1", Double.valueOf(100d)));
+       myPet.getVitrine().add(new Dog("brutus", "5", Double.valueOf(1000d)));
+       myPet.getVitrine().add(new Dog("mila", "2", Double.valueOf(100d)));
+       myPet.getVitrine().add(new Cat("kila", "4", Double.valueOf(1000d)));
+       myPet.getVitrine().add(new Cat("mani", "4", Double.valueOf(1000d)));
    }
  
    @Test
    public void maxPriceAll() {
-	   System.out.println("Max price is: " + from(myPet.getAnimalsStore()).maxValue("price", Double.class));
+	   System.out.println("Max price is: " + from(myPet.getVitrine()).maxValue("unitPrice", Double.class));
 	   
-       List<PetAnimal> maxPedgree = from(myPet.getAnimalsStore()).max("price", Double.class).all();
-       for (PetAnimal species : maxPedgree) {
+       List<StoreItem> maxPedgree = from(myPet.getVitrine()).max("unitPrice", Double.class).all();
+       for (StoreItem species : maxPedgree) {
            System.out.println(species.getName());
-           System.out.println(species.getPrice());
+           System.out.println(species.getUnitPrice());
        }
 
        assert maxPedgree!=null && !maxPedgree.isEmpty();
@@ -39,12 +40,12 @@ public class MaxTest {
    
    @Test
    public void maxPriceFirst() {
-	   System.out.println("Max price is: " + from(myPet.getAnimalsStore()).maxValue("price", Double.class));
+	   System.out.println("Max price is: " + from(myPet.getVitrine()).maxValue("unityPrice", Double.class));
 
-	   PetAnimal maxPedgree = from(myPet.getAnimalsStore()).max("price", Double.class).first();
+	   StoreItem maxPedgree = from(myPet.getVitrine()).max("price", Double.class).first();
        
-           System.out.println(maxPedgree.getName());
-           System.out.println(maxPedgree.getPrice());
+       System.out.println(maxPedgree.getName());
+       System.out.println(maxPedgree.getUnitPrice());
            
        assert maxPedgree!=null;
        
@@ -52,11 +53,11 @@ public class MaxTest {
 
    @Test
    public void maxNameAll() {
-	   System.out.println("Max name is: " + from(myPet.getAnimalsStore()).maxValue("name", String.class));
+	   System.out.println("Max name is: " + from(myPet.getVitrine()).maxValue("name", String.class));
 	   
-       List<PetAnimal> maxPedgree = from(myPet.getAnimalsStore()).max("name", String.class).all();
-       for (PetAnimal species : maxPedgree) {
-           System.out.println(String.format("%1s %2s %3s", species.getName(), species.getPedigree(), species.getPrice()));
+       List<StoreItem> maxPedgree = from(myPet.getVitrine()).max("name", String.class).all();
+       for (StoreItem species : maxPedgree) {
+           System.out.println(String.format("%1s %2s %3s", species.getName(), ((PetAnimal)species).getPedigree(), species.getUnitPrice()));
        }
 
        assert maxPedgree!=null && !maxPedgree.isEmpty();

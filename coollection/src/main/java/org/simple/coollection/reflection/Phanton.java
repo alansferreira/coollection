@@ -28,6 +28,8 @@ public class Phanton<T> {
 		Object nestedTarget = target;
 		Object returnValue = null;
 		
+		if(nestedTarget==null) return null;
+		
 		Class<? extends Object> nestedTargetClazz = clazz;
 		for (String nestedName : name.split("\\.")) {
 			Member m = getMember(nestedName, nestedTargetClazz);
@@ -35,9 +37,16 @@ public class Phanton<T> {
 			if(nestedTargetClazz.isArray() || returnValue instanceof Iterable){
 				ArrayList<Object> ret = new ArrayList<Object>();
 				for (Object	subItem : (Iterable<?>)nestedTarget) {
-					ret.add(from(subItem).invoke(nestedName));
+					Object subRet = from(subItem).invoke(nestedName);
+					if(nestedTargetClazz.isArray() || subRet instanceof Iterable){
+						for (Object subRetItem : (Iterable<?>)subRet) {
+							ret.add(subRetItem);
+						}
+					}else{
+						ret.add(subRet);
+					}
 				}
-				return ret;
+				returnValue = ret;
 			}
 
 			if(m instanceof Field){
@@ -131,7 +140,8 @@ public class Phanton<T> {
 	}
 	private void invoke(String name, Object newValue){
 		Object nestedTarget = target;
-
+		if(nestedTarget==null) return;
+		
 		Class<? extends Object> nestedTargetClazz = clazz;
 		String[] nestedNames = name.split("\\.");
 
@@ -152,22 +162,22 @@ public class Phanton<T> {
 			return;
 		}
 
-		try {
-			Method m = nestedTargetClazz.getMethod(nestedName, newValue.getClass());
-			m.invoke(nestedTarget, newValue);
-		} catch (Exception e) {
-			Field field = findField(nestedName, nestedTargetClazz);
-
-			if(field==null) throw new RuntimeException(e);
-			
+		Member m = getMember(nestedName, nestedTargetClazz);
+		
+		if(m instanceof Field){
 			try {
+				Field field = (Field)m;
 				field.setAccessible(Boolean.TRUE);
 				field.set(nestedTarget, newValue);
-			}catch (Exception e1) {
-				throw new RuntimeException(e1);
-			}
+			}catch (Exception e1) {throw new RuntimeException(e1);}
+			
+		}else if(m instanceof Method){
+			try {
+				Method method = (Method) m;
+				method.invoke(nestedTarget, newValue);
+			}catch (Exception e1) {throw new RuntimeException(e1);}
+			
 		}
-
 	}
 
 	public Class<?> getClazz() {

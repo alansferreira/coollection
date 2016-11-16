@@ -15,15 +15,15 @@ public class DistinctTest {
 	PetShop myPet = new PetShop();
 	@Before
 	public void setUp() throws Exception {
-		myPet.getAnimalsStore().add(new Dog("brutus", "1"));
-		myPet.getAnimalsStore().add(new Dog("mila", "2"));
-		myPet.getAnimalsStore().add(new Cat("kila", "3"));
-		myPet.getAnimalsStore().add(new Cat("mani", "4"));
+		myPet.getVitrine().add(new Dog("brutus", "1"));
+		myPet.getVitrine().add(new Dog("mila", "2"));
+		myPet.getVitrine().add(new Cat("kila", "3"));
+		myPet.getVitrine().add(new Cat("mani", "4"));
 	}
 
 	@Test
 	public void distinctSpecies() {
-		List<String> allSpecies = from(myPet.getAnimalsStore()).distinct("getSpecies").<String>select("getSpecies").all();
+		List<String> allSpecies = from(myPet.getVitrine()).distinct("getSpecies").<String>select("getSpecies").all();
 		for (String species : allSpecies) {
 			System.out.println(species);
 		}

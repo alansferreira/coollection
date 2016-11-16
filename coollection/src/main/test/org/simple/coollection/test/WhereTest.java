@@ -12,21 +12,22 @@ import org.simple.coollection.test.pojos.Cat;
 import org.simple.coollection.test.pojos.Dog;
 import org.simple.coollection.test.pojos.PetAnimal;
 import org.simple.coollection.test.pojos.PetShop;
+import org.simple.coollection.test.pojos.StoreItem;
 
 public class WhereTest {
 	PetShop myPet = new PetShop();
 	@Before
 	public void setUp() throws Exception {
-		myPet.getAnimalsStore().add(new Dog("brutus", "1"));
-		myPet.getAnimalsStore().add(new Dog("mila", "2"));
-		myPet.getAnimalsStore().add(new Cat("kila", "3"));
-		myPet.getAnimalsStore().add(new Cat("mani", "4"));
+		myPet.getVitrine().add(new Dog("brutus", "1"));
+		myPet.getVitrine().add(new Dog("mila", "2"));
+		myPet.getVitrine().add(new Cat("kila", "3"));
+		myPet.getVitrine().add(new Cat("mani", "4"));
 	}
 
 	@Test
 	public void listAllCats() {
-		List<PetAnimal> allCats = from(myPet.getAnimalsStore()).where("getSpecies", eqIgnoreCase("cat")).all();
-		for (PetAnimal animal : allCats) {
+		List<StoreItem> allCats = from(myPet.getVitrine()).where("getSpecies", eqIgnoreCase("cat")).all();
+		for (StoreItem animal : allCats) {
 			System.out.println("Cat: " + animal.getName());
 		}
 		assert allCats!=null && !allCats.isEmpty();
@@ -35,22 +36,22 @@ public class WhereTest {
 
 	@Test
 	public void firstCat() {
-		PetAnimal cat = from(myPet.getAnimalsStore()).where("getSpecies", eqIgnoreCase("cat")).first();
+		StoreItem cat = from(myPet.getVitrine()).where("getSpecies", eqIgnoreCase("cat")).first();
 		System.out.println(cat.getName());
-		assert cat!=null && cat.getSpecies()=="cat";
+		assert cat!=null && ((PetAnimal)cat).getSpecies()=="cat";
 		
 	}
 	@Test
 	public void allCatsWithName() {
-		List<PetAnimal> cats = from(myPet.getAnimalsStore())
+		List<StoreItem> cats = from(myPet.getVitrine())
 				.where("getSpecies", eqIgnoreCase("cat"))
 				.and("name", eqIgnoreCase("kila")).all();
 		
-		for (PetAnimal cat : cats) {
+		for (StoreItem cat : cats) {
 			System.out.println(cat.getName());
 		}
 
-		PetAnimal kila = cats.get(0);
+		PetAnimal kila = (PetAnimal) cats.get(0);
 		
 		assert kila.getSpecies()=="cat" && kila.getName().equalsIgnoreCase("kila");
 		
@@ -58,11 +59,11 @@ public class WhereTest {
 
 	@Test
 	public void allCatsOrCatsWithName() {
-		List<PetAnimal> cats = from(myPet.getAnimalsStore())
+		List<StoreItem> cats = from(myPet.getVitrine())
 				.where("getSpecies", eqIgnoreCase("cat"))
 				.or("name", eqIgnoreCase("kila")).all();
 		
-		for (PetAnimal cat : cats) {
+		for (StoreItem cat : cats) {
 			System.out.println(cat.getName());
 		}
 

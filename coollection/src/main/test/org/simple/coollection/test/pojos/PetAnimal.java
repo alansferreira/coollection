@@ -1,9 +1,7 @@
 package org.simple.coollection.test.pojos;
 
-public abstract class PetAnimal implements Animal {
+public abstract class PetAnimal extends StoreItem implements Animal {
 	String pedigree;
-	String name;
-	Double price;
 	public PetAnimal(){
 		
 	}
@@ -16,7 +14,7 @@ public abstract class PetAnimal implements Animal {
 	       this();
 	       this.name = argName;
 	       this.pedigree = argPedigree;
-	       this.price = argPrice;
+	       this.unitPrice = argPrice;
 	   }
 	 
 	public abstract String getSpecies();
@@ -29,17 +27,4 @@ public abstract class PetAnimal implements Animal {
 		this.pedigree = pedigree;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-	public Double getPrice() {
-		return price;
-	}
-	public void setPrice(Double price) {
-		this.price = price;
-	}
 }

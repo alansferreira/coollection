@@ -32,8 +32,14 @@ public class Criteria<T> {
 			Object value = null;
 			
 			value = method!=null? Phanton.from(item).call(method): item;
-			
-			return matcher.match(value);
+			if(value.getClass().isArray() || value instanceof Iterable){
+				for (Object subItem : (Iterable<?>) value) {
+					if(matcher.match(subItem))return true;
+				}
+				return false;
+			}else{
+				return matcher.match(value);
+			}
 		} catch(Exception err) {
 			throw new RuntimeException(err);
 		}
