@@ -32,7 +32,7 @@ public class Criteria<T> {
 			Object value = null;
 			
 			value = method!=null? Phanton.from(item).call(method): item;
-			if(value.getClass().isArray() || value instanceof Iterable){
+			if(value!=null &&  (value.getClass().isArray() || value instanceof Iterable)){
 				for (Object subItem : (Iterable<?>) value) {
 					if(matcher.match(subItem))return true;
 				}
