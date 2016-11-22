@@ -74,28 +74,6 @@ public class Phanton<T> {
 	}
 	
 	
-	private Field findField(String fieldName, Class<?> clazz) {
-		Field field = null;
-		try {
-			field = clazz.getField(fieldName);
-		} catch (NoSuchFieldException e2) {
-		} catch (SecurityException e2) {
-		}
-		if(field==null) {
-			try {
-				field = clazz.getDeclaredField(fieldName);
-			} catch (NoSuchFieldException e2) {
-			} catch (SecurityException e2) {
-			}
-		}
-
-		if(field==null && clazz.getSuperclass()!=Object.class) {
-			field = findField(fieldName, clazz.getSuperclass());
-		}
-		
-		return field;
-		
-	}
 
 	private Member getMember(String memberName, Class<?> clazz) {
 		Member returnValue = null;
@@ -157,6 +135,7 @@ public class Phanton<T> {
 
 		if(nestedTargetClazz.isArray() || nestedTarget instanceof Iterable){
 			for (Object	subItem : (Iterable<?>)nestedTarget) {
+				if(subItem==null) continue;
 				from(subItem).invoke(nestedName, newValue);
 			}
 			return;
