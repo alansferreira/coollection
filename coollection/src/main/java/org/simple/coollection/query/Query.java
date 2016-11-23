@@ -29,7 +29,10 @@ public class Query<T> {
 	private OrderCriteria<T> orderCriteria;
 	
 	public Query(Collection<T> collection) {
-		this.collection = collection;
+		Collection<T> aux = collection;
+		if(aux==null) aux = new ArrayList<T>();
+		
+		this.collection = aux;
 		criterias = new CriteriaList<T>();
 	}
 	
