@@ -55,11 +55,11 @@ public class Coollection {
 		return new Not(matcher);
 	}
 	
-	public static Matcher greaterThan(Number value) {
+	public static Matcher greaterThan(Comparable<?> value) {
 		return new GreaterThan(value);
 	}
 	
-	public static Matcher lessThan(Number value) {
+	public static Matcher lessThan(Comparable<?> value) {
 		return new LessThan(value);
 	}
 	

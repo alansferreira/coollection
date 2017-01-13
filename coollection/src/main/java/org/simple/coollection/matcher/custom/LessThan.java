@@ -4,9 +4,9 @@ import org.simple.coollection.matcher.Matcher;
 
 public class LessThan implements Matcher {
 
-	private final Number value;
+	private final Object value;
 
-	public LessThan(Number value) {
+	public LessThan(Object value) {
 		this.value = value;
 	}
 
@@ -15,7 +15,10 @@ public class LessThan implements Matcher {
 		if (matchValue == null){
 			return false;
 		}
-		return ((Number) matchValue).doubleValue() < value.doubleValue();
+		
+		Comparable<Object> v = (Comparable<Object>) value;
+		
+		return (v.compareTo(matchValue) > 0);
 	}
 
 }
